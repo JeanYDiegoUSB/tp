@@ -6,6 +6,98 @@
 %
 % @author Jean Alexander, 12-10848 y Diego Pedroza, 12-11281
 
+%% caballito(+N:int, +List:list)
+%
+% caballito(N, List) prueba que N y L están instanciadas,
+% List sea una solución posible y manda a probar aux_(N, List)
+% para imprimir la solución.
+%
+% @param N número entero
+% @param List lista con solución al problema
+caballito(2, L) :-
+	nonvar(L),
+	length(L, 4),
+	aux_(2, L),
+	!.
+caballito(N, L) :-
+	nonvar(N),
+	nonvar(L),
+	N > 0,
+	length(L, M),
+	M =:= //(+(*(N, N), 1), 2),
+	aux_(N, L),
+	!.
+
+%% aux_(+N:int, +List:list)
+%
+% aux_(N, List) imprime, de forma 'bonita', en
+% pantalla la solución que viene en L.
+%
+% @param N número entero
+% @param List lista con solución al problema
+aux_(N, []) :-
+	horiz(N),
+	!.
+aux_(1, [X]) :-
+	horiz(1),
+	write('|K|'),
+	nl,
+	aux_(1,[]).
+aux_(2, [k(X, Y1), k(X, Y2) | Resto]) :-
+	horiz(2),
+	write('|K|K|'),
+	nl,
+	aux_(2, Resto).
+aux_(3, [k(X, Y1), k(X, Y2), k(X, Y3) | Resto]) :-
+	horiz(3),
+	write('|K|K|K|'),
+	nl,
+	aux_(3, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	Y = 1,
+	horiz(N),
+	write('|K|'),
+	aux_(N, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	Y = 2,
+	Y =:= N - 1,
+	horiz(N),
+	write('| |K| |'),
+	nl,
+	aux_(N, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	Y = 2,
+	horiz(N),
+	write('| |K|'),
+	aux_(N, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	Y = N,
+	write(' |K|'),
+	nl,
+	aux_(N, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	Y =:= N-1,
+	write(' |K| |'),
+	nl,
+	aux_(N, Resto).
+aux_(N, [k(X, Y) | Resto]) :-
+	write(' |K|'),
+	aux_(N, Resto).
+
+%% horiz(+N:int)
+%
+% Imprime '+-' N veces, luego imprime '+' y un salto de línea
+%
+% @param N número entero
+horiz(0) :-
+	write('+'),
+	nl.
+horiz(N) :-
+	N > 0,
+	write('+-'),
+	N1 is N-1,
+	horiz(N1).	
+
 %% arre (+N:int, ?M:int, ?List:list)
 %
 % List es una configuración solución del problema del máximo
